@@ -15,8 +15,20 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('/login','UserController@login');
 
-Route::post('/register','UserController@register');
 
-Route::post('/post','PostController@create')->middleware('auth');
+
+
+Route::prefix('api')->group(function(){
+
+    Route::post('/login','UserController@login');
+
+    Route::post('/register','UserController@register');
+
+    Route::post('/posts','PostController@create')->middleware('auth');
+    Route::get('/posts','PostController@getAll')->middleware('auth');
+    Route::get('/posts/{id}','PostController@get')->middleware('auth');
+    Route::delete('/posts/{id}','PostController@delete')->middleware('auth');
+    Route::put('/posts/{id}','PostController@update')->middleware('auth');
+
+});

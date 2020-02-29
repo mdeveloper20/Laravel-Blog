@@ -1,0 +1,47 @@
+//dump autoload
+    composer dumpautoload
+
+//create model
+    php artisan make:model User -m //create model with migration
+
+
+//send variables to the view
+    return view('nameoffile')->with('varname',$varname);
+or
+    return view('nameoffile',['varname'=>$varname]);
+
+
+
+
+//query builders:
+
+    *-get all data:
+        DB::table('users')->get();
+
+    *-get specific row by its id
+        DB::table('users')->find(2);
+
+    *-get all only one column
+        DB::table('users')->pluck('email');
+
+    *-insert
+        DB::table('users')->insert([
+            'username'=>'testuser',
+            'slug'=>'test'
+        ])
+    *-insert many
+        DB::table('users')->insert([
+            ['username'=>'testuser','slug'=>'test'],
+            ['username'=>'testuser2','slug'=>'test2']
+
+        ])
+    *-update
+        DB::table('users')->where('slug','test2')->update([
+            'username'=>'hi'
+        ])
+    *-delete all
+        DB::table('users')->delete();
+    *-get latest
+        DB::table('users')->latest();
+
+

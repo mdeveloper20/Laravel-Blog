@@ -1,0 +1,22 @@
+//define a route
+    Route::get('uri',function(){
+
+    });
+
+
+//define a route with arguments
+    Route::get('posts/{id}',function($id){
+
+    });
+
+
+//define a route with controller
+    Route::get('posts/{id}','PostController@getOne');
+
+
+//route group with prefix: all will be /admin/...
+    Route::prefix('admin')->group(function(){
+        Route::get('posts','PostController@all');
+        Route::get('users','UserController@all');
+
+    })

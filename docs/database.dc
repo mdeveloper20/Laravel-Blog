@@ -1,0 +1,53 @@
+//apply migrations
+    php artisan migrate
+
+//rename a table using migrations
+    Schema::rename($from, $to);
+
+//define foreign keys
+    Schema::table('posts', function (Blueprint $table) {
+        $table->unsignedBigInteger('user_id');
+
+        $table->foreign('user_id')->references('id')->on('users');
+    });
+
+//remove foreign keys
+    $table->dropForeign('posts_user_id_foreign');
+
+
+//ctrl+z in migrations: rollback the last executed migration:
+        php artisan migrate:rollback --step=1 // one step backward
+
+    or
+        php artisan migrate:reset // go to first status
+
+
+//change fields using migration(will wipe all data)
+    1- apply changes in the migration files.
+    2- run:
+        php artisan migrate:referesh // it will reset first and then migrate again
+
+
+//seed database with fake data:
+
+    //1-config the factory from database/factory folder
+
+    //2-in database/seeds/DatabaseSeeder.php:
+        factory(\App\User::class , 5)->create();
+
+    //3-run the command:
+        php artisan db:seed
+
+
+//check column exists
+    if (Schema::hasColumn('users', 'email')) {
+        //
+    }
+
+
+//change a column in db
+    Schema::table('users', function (Blueprint $table) {
+        if (Schema::hasColumn('users', 'token')) {
+            $table->text('token')->nullable()->change();
+        }
+    });
