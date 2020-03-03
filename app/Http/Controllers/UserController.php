@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use DateTime;
+use DateInterval;
 
 /*
 Role:
@@ -21,6 +23,10 @@ class UserController extends Controller
 
         if($user!=null){
             $token=md5(time());
+            $expire=new DateTime('NOW');
+            $expire->add(new DateInterval('PT8H'));
+
+            $user->token_expire=$expire;
             $user->token=$token;
             $user->save();
             return response()->json(['token'=>$token,'success'=>1]);

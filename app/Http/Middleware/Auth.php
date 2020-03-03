@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\User;
+use DateTime;
 class Auth
 {
     /**
@@ -16,7 +17,9 @@ class Auth
     public function handle($request, Closure $next)
     {
         $token=$request->token;
-        $user=User::where('token',$token)->first();
+        $now=new DateTime('NOW');
+
+        $user=User::where([['token',$token],['token_expire','>=',$now]])->first();
         if(!$user){
             return response()->json([],401);
         }
