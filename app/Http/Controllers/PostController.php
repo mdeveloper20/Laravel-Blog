@@ -4,6 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Post;
+
+/*
+Role:
+    0=>normal user
+    1=>manager
+    2=>admin
+*/
+
+
 class PostController extends Controller
 {
     //
@@ -31,8 +40,8 @@ class PostController extends Controller
 
         $user=$request->get('user');
 
-        if($user->role==1){
-            //manager: fetch all posts
+        if($user->role>0){
+            //manager and admin: fetch all posts
             $post=Post::where(['id'=>$request->id])->first();
         }else{
             $post=Post::where(['id'=>$request->id,'user_id'=>$user->id])->first();
@@ -52,8 +61,8 @@ class PostController extends Controller
 
         $user=$request->get('user');
 
-        if($user->role==1){
-            //manager: fetch all posts
+        if($user->role>0){
+            //manager and admin: fetch all posts
             $posts=Post::get();
         }else{
             $posts=Post::where('user_id',$user->id)->get();
@@ -73,15 +82,15 @@ class PostController extends Controller
         $success=false;
 
         try{
-            if($user->role==1){
-                //manager can remove all posts
+            if($user->role>0){
+                //manager and admin can remove all posts
                 $success=Post::find($request->id)->delete();
             }else{
                 //normal user only can remove his own posts
                 $success=Post::where(['user_id'=>$user->id,'id'=>$request->id])->delete();
             }
         }catch(Exception $exception){
-            return response()->json(['success'=>0]);
+            return response()->json(['success'=>0],500);
 
         }finally{
             return response()->json(['success'=>$success]);
@@ -98,9 +107,9 @@ class PostController extends Controller
         $success=false;
 
         try{
-            if($user->role==1){
+            if($user->role>0){
 
-                //manager can update all posts
+                //manager and admin can update all posts
                 $success=Post::find($request->id)->update(json_decode($data,true));
 
             }else{
@@ -108,7 +117,7 @@ class PostController extends Controller
                 $success=Post::where(['user_id'=>$user->id,'id'=>$request->id])->update(json_decode($data,true));
             }
         }catch(Exception $exception){
-            return response()->json(['success'=>0,'error'=>$exception]);
+            return response()->json(['success'=>0],500);
 
         }finally{
             return response()->json(['success'=>$success]);
