@@ -13,6 +13,32 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+
+Route::post('login','UserController@login');
+
+Route::post('register','UserController@register');
+
+
+Route::prefix('posts')->middleware('auth')->group(function(){
+
+
+    Route::get('/','PostController@getAll');
+    Route::get('/{id}','PostController@get');
+    Route::post('/','PostController@create');
+    Route::delete('/{id}','PostController@delete');
+    Route::put('/{id}','PostController@update');
+
 });
+
+Route::prefix('users')->middleware('adminAuth')->group(function(){
+
+
+    Route::get('/','UserController@getAll');
+    Route::get('/{id}','UserController@get');
+    Route::post('/','UserController@create');
+    Route::delete('/{id}','UserController@delete');
+    Route::put('/{id}','UserController@update');
+
+});
+
+
